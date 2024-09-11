@@ -19,7 +19,6 @@ public class PreloadData implements CommandLineRunner {
 
   private static final Logger log = LoggerFactory.getLogger(PreloadData.class);
 
-
   final IngredientRepository repo;
   final UserRepository userRepository;
   final PasswordEncoder encoder;
@@ -36,9 +35,7 @@ public class PreloadData implements CommandLineRunner {
   @Override
   public void run(String... args) throws Exception{
 
-
-
-            Ingredient flourTortilla = new Ingredient(
+    Ingredient flourTortilla = new Ingredient(
             "FLTO", "Flour Tortilla", IngredientType.WRAP);
 
     Ingredient cornTortilla = new Ingredient(
@@ -60,16 +57,16 @@ public class PreloadData implements CommandLineRunner {
     Ingredient sourCream = new Ingredient(
             "SRCR", "Sour Cream", IngredientType.SAUCE);
 
-    log.info("Preloading "+ repo.save(flourTortilla));
-    log.info("Preloading "+ repo.save(cornTortilla));
-    log.info("Preloading "+ repo.save(groundBeef));
-    log.info("Preloading "+ repo.save(carnitas));
-    log.info("Preloading "+ repo.save(tomatoes));
-    log.info("Preloading "+ repo.save(lettuce));
-    log.info("Preloading "+ repo.save(cheddar));
-    log.info("Preloading "+ repo.save(jack));
-    log.info("Preloading "+ repo.save(salsa));
-    log.info("Preloading "+ repo.save(sourCream));
+    log.info("Preloading " + repo.save(flourTortilla));
+    log.info("Preloading " + repo.save(cornTortilla));
+    log.info("Preloading " + repo.save(groundBeef));
+    log.info("Preloading " + repo.save(carnitas));
+    log.info("Preloading " + repo.save(tomatoes));
+    log.info("Preloading " + repo.save(lettuce));
+    log.info("Preloading " + repo.save(cheddar));
+    log.info("Preloading " + repo.save(jack));
+    log.info("Preloading " + repo.save(salsa));
+    log.info("Preloading " + repo.save(sourCream));
 
     Taco taco1 = new Taco();
     taco1.setName("Carnivore");

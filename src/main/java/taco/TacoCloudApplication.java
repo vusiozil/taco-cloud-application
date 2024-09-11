@@ -8,13 +8,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 @Slf4j
-public class TacoCloudApplication{
+public class TacoCloudApplication {
 
-	private static final Logger LOG = LoggerFactory.getLogger(TacoCloudApplication.class);
+  private static final Logger LOG = LoggerFactory.getLogger(TacoCloudApplication.class);
 
-	public static void main(String[] args) {
-		SpringApplication.run(TacoCloudApplication.class, args);
-		LOG.info("starting taco cloud application");
-	}
+  public static void main(String[] args){
+    SpringApplication.run(TacoCloudApplication.class, args);
+    LOG.info("starting taco cloud application");
+  }
 
 }

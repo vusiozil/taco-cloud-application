@@ -1,6 +1,6 @@
 ----------------------------------------------------------------
-Tue Jul 30 22:43:09 SAST 2024:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0191-0561-eb84-000002dfa878 
+Wed Sep 11 22:36:37 SAST 2024:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0191-e2cd-646f-00000298a1c8 
 on database directory memory:C:\myworkbench\taco-cloud-application\testdb with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@60e53b93 
 Loaded from file:/C:/myworkbench/mydata/maven2_repo/org/apache/derby/derby/10.14.2.0/derby-10.14.2.0.jar
 java.vendor=Azul Systems, Inc.
@@ -11,6 +11,3 @@ os.arch=amd64
 os.version=10.0
 derby.system.home=null
 Database Class Loader started - derby.database.classpath=''
-----------------------------------------------------------------
-Tue Jul 30 22:44:06 SAST 2024:
-Shutting down instance a816c00e-0191-0561-eb84-000002dfa878 on database directory memory:C:\myworkbench\taco-cloud-application\testdb with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@60e53b93 
