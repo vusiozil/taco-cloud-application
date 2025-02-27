@@ -21,6 +21,8 @@ public class Ingredient implements Serializable {
   @NotNull
   private IngredientType type;
 
+  private double price;
+
   public Ingredient(){
   }
 
@@ -54,12 +56,21 @@ public class Ingredient implements Serializable {
     this.type = type;
   }
 
+  public double getPrice() {
+    return price;
+  }
+
+  public void setPrice(double price) {
+    this.price = price;
+  }
+
   @Override
-  public String toString(){
+  public String toString() {
     return "Ingredient{" +
             "id='" + id + '\'' +
             ", name='" + name + '\'' +
             ", type=" + type +
+            ", price=" + price +
             '}';
   }
 }
