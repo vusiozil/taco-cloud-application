@@ -12,6 +12,7 @@ import taco.repository.IngredientRepository;
 
 import java.net.URI;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -45,13 +46,27 @@ public class IngredientController {
 	}
 
 
+//	@GetMapping
+//	public ResponseEntity<Collection<Ingredient>> findAll(Pageable pageable) {
+//		Page<Ingredient> page = repository.findAll(
+//				PageRequest.of(
+//						pageable.getPageNumber(),
+//						pageable.getPageSize(),
+//						pageable.getSortOr(Sort.by(Sort.Direction.DESC, "amount"))));
+//		return ResponseEntity.ok(page.toList());
+//	}
+
+
 	@GetMapping
-	public ResponseEntity<Collection<Ingredient>> findAll(Pageable pageable) {
+	public ResponseEntity<List<Ingredient>> getIngredients(
+					@RequestParam(defaultValue = "0") int pageNumber,
+					@RequestParam(defaultValue = "10") int size) {
+
 		Page<Ingredient> page = repository.findAll(
-				PageRequest.of(
-						pageable.getPageNumber(),
-						pageable.getPageSize(),
-						pageable.getSortOr(Sort.by(Sort.Direction.DESC, "amount"))));
-		return ResponseEntity.ok(page.toList());
+						PageRequest.of(pageNumber, size, Sort.by(Sort.Direction.DESC, "id"))
+		);
+
+		return ResponseEntity.ok(page.getContent());
 	}
+
 }

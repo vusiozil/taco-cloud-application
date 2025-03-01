@@ -11,13 +11,21 @@ import java.util.Collection;
 @Entity
 @Table(name="users")
 public class User extends BaseEntity implements UserDetails {
+
   private String username;
+
   private String password;
-  private String fullname;
+
+  private String fullName;
+
   private String street;
+
   private String city;
+
   private String state;
+
   private String zip;
+
   private String phoneNumber;
 
   public User(){
@@ -27,15 +35,15 @@ public class User extends BaseEntity implements UserDetails {
               String state, String zip, String phoneNumber){
     this.username = username;
     this.password = password;
-    this.fullname = fullname;
+    this.fullName = fullname;
     this.street = street;
     this.city = city;
     this.state = state;
     this.zip = zip;
     this.phoneNumber = phoneNumber;
   }
-  public String getFullname(){
-    return fullname;
+  public String getFullName(){
+    return fullName;
   }
 
   public String getStreet(){
@@ -66,8 +74,8 @@ public class User extends BaseEntity implements UserDetails {
     this.password = password;
   }
 
-  public void setFullname(String fullname){
-    this.fullname = fullname;
+  public void setFullName(String fullName){
+    this.fullName = fullName;
   }
 
   public void setStreet(String street){

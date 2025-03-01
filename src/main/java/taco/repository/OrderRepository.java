@@ -10,4 +10,8 @@ import java.util.List;
 
 public interface OrderRepository extends JpaRepository<TacoOrder,Long> {
 
+  List<TacoOrder> findAllByDeliveryZip(String deliveryZip);
+
+  List<TacoOrder> findByUserOrderByPlacedAtDesc(User user, Pageable pageable);
+
 }
