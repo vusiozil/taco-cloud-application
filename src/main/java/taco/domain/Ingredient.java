@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Entity
-@RestResource(rel ="ingredients" ,path = "ingredients")
+@RestResource(rel = "ingredients", path = "ingredients")
 public class Ingredient implements Serializable {
 
   @NotNull
@@ -26,10 +26,11 @@ public class Ingredient implements Serializable {
   public Ingredient(){
   }
 
-  public Ingredient(String id, String name, IngredientType type){
+  public Ingredient(String id, String name, IngredientType type,double price){
     this.id = id;
     this.name = name;
     this.type = type;
+    this.price = price;
   }
 
   public String getId(){
@@ -56,16 +57,16 @@ public class Ingredient implements Serializable {
     this.type = type;
   }
 
-  public double getPrice() {
+  public double getPrice(){
     return price;
   }
 
-  public void setPrice(double price) {
+  public void setPrice(double price){
     this.price = price;
   }
 
   @Override
-  public String toString() {
+  public String toString(){
     return "Ingredient{" +
             "id='" + id + '\'' +
             ", name='" + name + '\'' +

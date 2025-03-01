@@ -10,4 +10,5 @@ public enum FeatureFlags implements Feature {
 
     @Label("When a product is finished")
     OUT_OF_STOCK
+
 }
