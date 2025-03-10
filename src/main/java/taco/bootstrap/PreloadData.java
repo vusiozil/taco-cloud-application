@@ -22,8 +22,6 @@ public class PreloadData implements CommandLineRunner {
 
   final UserRepository userRepository;
 
-  //  final PasswordEncoder encoder;
-
   final TacoRepository tacoRepository;
 
   public PreloadData(IngredientRepository repo, UserRepository userRepository,

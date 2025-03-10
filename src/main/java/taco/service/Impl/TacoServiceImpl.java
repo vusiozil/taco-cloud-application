@@ -1,65 +1,44 @@
 package taco.service.Impl;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.togglz.core.manager.FeatureManager;
-import taco.domain.Ingredient;
 import taco.domain.Taco;
+import taco.helper.DataNotFoundException;
 import taco.repository.TacoRepository;
 import taco.service.TacoService;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static taco.helper.FeatureFlags.DISCOUNT_APPLIED;
 
 @Service
 public class TacoServiceImpl implements TacoService {
 
   private final TacoRepository tacoRepository;
 
-  private final FeatureManager featureManager;
-
-  public TacoServiceImpl(TacoRepository tacoRepository, FeatureManager featureManager){
+  public TacoServiceImpl(TacoRepository tacoRepository){
     this.tacoRepository = tacoRepository;
-    this.featureManager = featureManager;
   }
 
   @Override
   public List<Taco> findAll(){
 
-    System.out.println("featureManager.isActive(DISCOUNT_APPLIED) = " + featureManager.isActive(DISCOUNT_APPLIED));
-
-    if(featureManager.isActive(DISCOUNT_APPLIED)){
-
-      return tacoRepository
-              .findAll()
-              .parallelStream().map(d -> {
-                double amount = d.getIngredients()
-                        .parallelStream()
-                        .mapToDouble(Ingredient::getPrice)
-                        .sum();
-                d.setPrice(amount - amount * 0.05);
-                return d;
-              }).collect(Collectors.toList());
-
-    }
-    return tacoRepository
-            .findAll()
-            .parallelStream().map(d -> {
-              double amonut = d.getIngredients()
-                      .parallelStream()
-                      .mapToDouble(Ingredient::getPrice)
-                      .sum();
-              d.setPrice(amonut);
-              return d;
-            }).collect(Collectors.toList());
+    return tacoRepository.findAll();
   }
 
   @Override
-  public Optional<Taco> findById(Long id){
+  public Page<Taco> findAll(Pageable page){
 
-    return tacoRepository.findById(id);
+    return tacoRepository
+            .findAll(page);
+  }
+
+  @Override
+  public Taco findById(Long id){
+
+    Taco taco = tacoRepository
+            .findById(id)
+            .orElseThrow(() -> new DataNotFoundException("Taco " + id));
+    return taco;
   }
 
   @Override
@@ -75,11 +54,32 @@ public class TacoServiceImpl implements TacoService {
 
   @Override
   public void deleteById(Long id){
+
+    if(!existsById(id)){
+      throw new DataNotFoundException("Taco " + id);
+    }
+
     tacoRepository.deleteById(id);
   }
 
   @Override
-  public void delete(Taco entity){
-    tacoRepository.delete(entity);
+  public Taco update(Taco taco){
+
+    if(!existsById(taco.getId())){
+      throw new DataNotFoundException("Taco " + taco.getId());
+    }
+
+    return tacoRepository.save(taco);
   }
+
+  @Override
+  public void delete(Taco taco){
+
+    if(!existsById(taco.getId())){
+      throw new DataNotFoundException("Taco " + taco.getId());
+    }
+
+    tacoRepository.delete(taco);
+  }
+
 }

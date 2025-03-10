@@ -1,83 +1,76 @@
 package taco.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.EntityModel;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import taco.domain.OrderStage;
 import taco.domain.TacoOrder;
-import taco.helper.TacoOrderNotFoundException;
-import taco.repository.OrderRepository;
 import taco.service.OrderMessagingService;
+import taco.service.OrderService;
 
+import javax.validation.constraints.NotNull;
+import java.net.URI;
 import java.util.List;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
 @RestController
-@RequestMapping(value = "/orders", consumes = "application/json", produces = "application/json")
+@RequestMapping(value = "/orders")
 public class TacoOrderController {
 
-  private final OrderRepository orderRepository;
+  private OrderService orderService;
 
   private final OrderMessagingService messagingService;
 
   @Autowired
-  public TacoOrderController(OrderRepository orderRepository,
+  public TacoOrderController(OrderService orderService,
                              OrderMessagingService messagingService){
-    this.orderRepository = orderRepository;
+    this.orderService = orderService;
     this.messagingService = messagingService;
   }
 
   @PostMapping
-  @ResponseStatus(HttpStatus.CREATED)
-  public TacoOrder saveOrder(@RequestBody TacoOrder order){
+  public ResponseEntity<String> save(@RequestBody TacoOrder order){
 
     order.setOrderStage(OrderStage.PLACED);
 
     messagingService.sendOrder(order);
-    return orderRepository.save(order);
+
+    TacoOrder tacoOrder = orderService.save(order);
+    return ResponseEntity
+            .created(URI.create("/orders/" + tacoOrder.getId()))
+            .body("Taco order created successfully");
   }
 
   @PutMapping("/{id}")
-  public TacoOrder updateOrder(@RequestBody TacoOrder tacoOrder, @PathVariable("id") Long id){
+  public ResponseEntity<String> update(@RequestBody TacoOrder tacoOrder,
+                                       @PathVariable("id") Long id){
 
-    return orderRepository
-            .findById(id)
-            .map(order -> {
-              order.setUser(tacoOrder.getUser());
-              order.setTacos(tacoOrder.getTacos());
-              return orderRepository.save(order);
-            }).orElseGet(() -> {
-              tacoOrder.setId(id);
-              return orderRepository.save(tacoOrder);
-            });
+    tacoOrder.setId(id);
+    orderService.update(tacoOrder);
+    return ResponseEntity
+            .ok("Order updated successfully");
   }
 
   @DeleteMapping("/{id}")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void deleteTacoOrder(@PathVariable("id") Long id){
+  public ResponseEntity<String> delete(@NotNull @PathVariable("id") Long id){
 
-    orderRepository.deleteById(id);
+    orderService.deleteById(id);
+
+    return ResponseEntity
+            .ok("Order deleted successfully");
   }
 
   @GetMapping("/{id}")
-  public EntityModel<TacoOrder> getOrderById(@PathVariable("id") Long id){
-    TacoOrder tacoOrder = orderRepository
-            .findById(id)
-            .orElseThrow(() -> new TacoOrderNotFoundException(id));
+  public ResponseEntity<TacoOrder> getOrderById(@NotNull @PathVariable("id") Long id){
 
-    return EntityModel.of(tacoOrder, //
-            linkTo(methodOn(TacoOrderController.class).getOrderById(id)).withSelfRel(),
-            linkTo(methodOn(TacoOrderController.class).getOrders()).withRel("api/orders"));
+    TacoOrder tacoOrder = orderService.findById(id);
 
-    //    return tacoOrder;
+    return ResponseEntity.ok(tacoOrder);
+
   }
 
   @GetMapping
-  public List<TacoOrder> getOrders(){
-    return orderRepository.findAll();
+  public ResponseEntity<List<TacoOrder>> getOrders(){
+    return ResponseEntity.ok(orderService.findAll());
   }
 
 }

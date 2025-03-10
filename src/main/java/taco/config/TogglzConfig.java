@@ -8,9 +8,9 @@ import org.togglz.core.user.UserProvider;
 @Configuration
 public class TogglzConfig {
 
-  @Bean
-  public UserProvider userProvider(){
-    // Provide a default anonymous user with admin privileges
-    return () -> new SimpleFeatureUser("admin", true);
-  }
+//  @Bean
+//  public UserProvider userProvider(){
+//    // Provide a default anonymous user with admin privileges
+//    return () -> new SimpleFeatureUser("admin", true);
+//  }
 }

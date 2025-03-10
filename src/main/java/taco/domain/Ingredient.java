@@ -3,12 +3,12 @@ package taco.domain;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Entity
-@RestResource(rel = "ingredients", path = "ingredients")
 public class Ingredient implements Serializable {
 
   @NotNull
@@ -19,6 +19,7 @@ public class Ingredient implements Serializable {
   private String name;
 
   @NotNull
+  @Enumerated
   private IngredientType type;
 
   private double price;
@@ -26,7 +27,7 @@ public class Ingredient implements Serializable {
   public Ingredient(){
   }
 
-  public Ingredient(String id, String name, IngredientType type,double price){
+  public Ingredient(String id, String name, IngredientType type, double price){
     this.id = id;
     this.name = name;
     this.type = type;

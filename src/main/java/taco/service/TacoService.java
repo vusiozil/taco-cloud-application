@@ -1,23 +1,26 @@
 package taco.service;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import taco.domain.Taco;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface TacoService {
 
+  List<Taco> findAll();
 
-	List<Taco> findAll();
+  Page<Taco> findAll(Pageable page);
 
-	Optional<Taco> findById(Long id);
+  Taco findById(Long id);
 
-	boolean existsById(Long id);
+  boolean existsById(Long id);
 
-	Taco save(Taco entity);
+  Taco save(Taco entity);
 
-	void deleteById(Long id);
+  void deleteById(Long id);
 
-	void delete(Taco entity);
+  Taco update(Taco taco);
+
+  void delete(Taco entity);
 }
