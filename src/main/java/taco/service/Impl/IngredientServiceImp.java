@@ -30,8 +30,8 @@ public class IngredientServiceImp implements IngredientService {
   }
 
   @Override
-  public void delete(Ingredient ingredient){
-    Ingredient saved = findById(ingredient.getId());
+  public void deleteById(String id){
+    Ingredient saved = findById(id);
 
     ingredientRepository.delete(saved);
   }

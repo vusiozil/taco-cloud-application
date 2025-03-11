@@ -1,10 +1,11 @@
 package taco.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/tacos")
+@Tag(name = "Taco API", description = "Endpoints for managing tacos")
 public class TacoController {
 
   private final TacoService tacoService;
@@ -26,8 +28,13 @@ public class TacoController {
   }
 
   @GetMapping
-  public ResponseEntity<?> findAll(@PageableDefault(size = 10, sort = "createdAt", direction =
-          Sort.Direction.DESC) Pageable pageable){
+  @Operation(
+          summary = "Retrieve all tacos",
+          description = "Fetches a list of all available tacos with optional pagination and " +
+                  "sorting."
+  )
+  public ResponseEntity<?> findAll(@Parameter(description = "Pagination and sorting options")
+                                   Pageable pageable){
 
     if(pageable.isUnpaged()){
 
@@ -39,6 +46,10 @@ public class TacoController {
   }
 
   @PostMapping
+  @Operation(
+          summary = "Create a new taco",
+          description = "Saves a new taco in the system."
+  )
   public ResponseEntity<String> save(@Valid @RequestBody Taco taco){
 
     Taco savedTaco = tacoService.save(taco);
@@ -50,7 +61,12 @@ public class TacoController {
   }
 
   @DeleteMapping("/{Id}")
-  public ResponseEntity<String> delete(@PathVariable("Id") Long id){
+  @Operation(
+          summary = "Delete a taco",
+          description = "Removes a taco from the system using its ID."
+  )
+  public ResponseEntity<String> delete(@Parameter(description = "ID of the taco to delete")
+                                       @PathVariable("Id") Long id){
 
     tacoService.deleteById(id);
 
@@ -60,7 +76,12 @@ public class TacoController {
   }
 
   @GetMapping("/{Id}")
-  public ResponseEntity<Taco> getTacoById(@PathVariable("Id") Long id){
+  @Operation(
+          summary = "Retrieve a taco by ID",
+          description = "Fetches a taco based on the given ID."
+  )
+  public ResponseEntity<Taco> getTacoById(@Parameter(description = "ID of the taco to retrieve")
+                                          @PathVariable("Id") Long id){
 
     Taco taco = tacoService.findById(id);
 
@@ -68,7 +89,13 @@ public class TacoController {
   }
 
   @PutMapping("/{Id}")
-  public ResponseEntity<Taco> update(@PathVariable("Id") Long id, @Valid @RequestBody Taco taco){
+  @Operation(
+          summary = "Update an existing taco",
+          description = "Updates the details of an existing taco using the provided ID."
+  )
+  public ResponseEntity<Taco> update(@Parameter(description = "ID of the taco to update")
+                                     @PathVariable("Id") Long id,
+                                     @Valid @RequestBody Taco taco){
 
     taco.setId(id);
     Taco updatedTaco = tacoService.update(taco);

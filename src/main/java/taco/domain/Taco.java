@@ -9,7 +9,10 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 import static taco.helper.FeatureFlags.DISCOUNT_APPLIED;
@@ -23,7 +26,7 @@ public class Taco extends BaseEntity implements Serializable {
 
   @CreationTimestamp
   @Column(updatable = false, nullable = false)
-  private Date createdAt;
+  private Timestamp createdAt;
 
   @Transient
   private double price;
@@ -59,7 +62,7 @@ public class Taco extends BaseEntity implements Serializable {
     this.ingredients = ingredients;
   }
 
-  public Date getCreatedAt(){
+  public Timestamp getCreatedAt(){
     return createdAt;
   }
 
@@ -70,9 +73,13 @@ public class Taco extends BaseEntity implements Serializable {
             .sum();
 
     if(DISCOUNT_APPLIED.isActive()){
-      return amount - amount * 0.05;
+      amount *= 0.95; // apply the 5% discount
     }
-    return amount;
+
+    return BigDecimal
+            .valueOf(amount)
+            .setScale(2, RoundingMode.HALF_UP)
+            .doubleValue();
   }
 
   @Override

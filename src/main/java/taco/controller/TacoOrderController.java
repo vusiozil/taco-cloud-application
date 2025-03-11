@@ -1,6 +1,11 @@
 package taco.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import taco.domain.OrderStage;
@@ -8,12 +13,12 @@ import taco.domain.TacoOrder;
 import taco.service.OrderMessagingService;
 import taco.service.OrderService;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.Valid;
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/orders")
+@Tag(name = "Order API", description = "Endpoints for managing taco orders")
 public class TacoOrderController {
 
   private OrderService orderService;
@@ -28,7 +33,12 @@ public class TacoOrderController {
   }
 
   @PostMapping
-  public ResponseEntity<String> save(@RequestBody TacoOrder order){
+  @Operation(
+          summary = "Create a new order",
+          description = "Saves a new taco order and assigns it the status 'PLACED'. The order is " +
+                  "also sent to the messaging service."
+  )
+  public ResponseEntity<String> save(@Valid @RequestBody TacoOrder order){
 
     order.setOrderStage(OrderStage.PLACED);
 
@@ -41,7 +51,12 @@ public class TacoOrderController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<String> update(@RequestBody TacoOrder tacoOrder,
+  @Operation(
+          summary = "Update an existing order",
+          description = "Updates the details of an existing order based on the given ID."
+  )
+  public ResponseEntity<String> update(@Valid @RequestBody TacoOrder tacoOrder,
+                                       @Parameter(description = "ID of the order to update")
                                        @PathVariable("id") Long id){
 
     tacoOrder.setId(id);
@@ -51,7 +66,12 @@ public class TacoOrderController {
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<String> delete(@NotNull @PathVariable("id") Long id){
+  @Operation(
+          summary = "Delete an order",
+          description = "Deletes an order by the given ID."
+  )
+  public ResponseEntity<String> delete(@Parameter(description = "ID of the order to delete")
+                                       @PathVariable("id") Long id){
 
     orderService.deleteById(id);
 
@@ -60,7 +80,12 @@ public class TacoOrderController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<TacoOrder> getOrderById(@NotNull @PathVariable("id") Long id){
+  @Operation(
+          summary = "Retrieve an order",
+          description = "Fetches an order by the given ID."
+  )
+  public ResponseEntity<TacoOrder> getOrderById(@Parameter(description = "ID of the order to " +
+          "retrieve") @PathVariable("id") Long id){
 
     TacoOrder tacoOrder = orderService.findById(id);
 
@@ -69,8 +94,31 @@ public class TacoOrderController {
   }
 
   @GetMapping
-  public ResponseEntity<List<TacoOrder>> getOrders(){
-    return ResponseEntity.ok(orderService.findAll());
+  @Operation(
+          summary = "Retrieve all orders",
+          description = "Fetches all orders with optional pagination and sorting."
+  )
+  public ResponseEntity<?> getOrders(@Parameter(description = "Pagination and sorting options") @PageableDefault(size = 10) Pageable pageable){
+
+    if(pageable.isUnpaged()){
+
+      return ResponseEntity.ok(orderService.findAll());
+    }
+
+    return ResponseEntity
+            .ok(orderService.findAll(pageable));
+  }
+
+  @DeleteMapping
+  @Operation(
+          summary = "Delete all orders",
+          description = "Deletes all orders. This operation should be restricted to administrators."
+  )
+  public ResponseEntity<String> deleteAll(){
+
+    orderService.deleteAllOrders();
+    return ResponseEntity.ok("Deleted all orders");
+
   }
 
 }

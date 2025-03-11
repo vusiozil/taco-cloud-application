@@ -1,12 +1,12 @@
 package taco.domain;
 
-import org.springframework.data.rest.core.annotation.RestResource;
-
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @Entity
 public class Ingredient implements Serializable {
@@ -59,7 +59,10 @@ public class Ingredient implements Serializable {
   }
 
   public double getPrice(){
-    return price;
+    return BigDecimal
+            .valueOf(price)
+            .setScale(2, RoundingMode.HALF_UP)
+            .doubleValue();
   }
 
   public void setPrice(double price){
