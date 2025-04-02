@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import taco.domain.Taco;
 import taco.service.TacoService;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.net.URI;
 
 @RestController

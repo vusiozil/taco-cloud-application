@@ -3,7 +3,7 @@ package taco.service.Impl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import taco.domain.TacoOrder;
+import taco.domain.Order;
 import taco.helper.DataNotFoundException;
 import taco.repository.OrderRepository;
 
@@ -27,12 +27,12 @@ public class OrderServiceImp implements taco.service.OrderService {
   }
 
   @Override
-  public TacoOrder save(TacoOrder order){
+  public Order save(Order order){
     return orderRepository.save(order);
   }
 
   @Override
-  public TacoOrder findById(Long id){
+  public Order findById(Long id){
     return orderRepository
             .findById(id)
             .orElseThrow(() -> new DataNotFoundException("Order of Id " + id));
@@ -41,26 +41,26 @@ public class OrderServiceImp implements taco.service.OrderService {
   @Override
   public void deleteById(Long id){
 
-    TacoOrder tacoOrder = findById(id);
+    Order order = findById(id);
 
-    orderRepository.delete(tacoOrder);
+    orderRepository.delete(order);
   }
 
   @Override
-  public Page<TacoOrder> findAll(Pageable pageable){
+  public Page<Order> findAll(Pageable pageable){
     return orderRepository.findAll(pageable);
   }
 
   @Override
-  public List<TacoOrder> findAll(){
+  public List<Order> findAll(){
     return orderRepository.findAll();
   }
 
   @Override
-  public void update(TacoOrder tacoOrder){
+  public void update(Order order){
 
-    findById(tacoOrder.getId());
+    findById(order.getId());
 
-    orderRepository.save(tacoOrder);
+    orderRepository.save(order);
   }
 }

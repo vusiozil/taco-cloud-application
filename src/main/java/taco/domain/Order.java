@@ -1,12 +1,11 @@
 package taco.domain;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
+import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -14,10 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class TacoOrder extends BaseEntity implements Serializable {
+@Table(name = "orders")
+public class Order extends BaseEntity implements Serializable {
 
+  @Serial
   @NotBlank
-  private static final long serialVersionUID = 1L;
+  private static final long  serialVersionUID = 1L;
 
   @ManyToOne
   private User user;
@@ -33,7 +34,7 @@ public class TacoOrder extends BaseEntity implements Serializable {
   @OneToMany(cascade = CascadeType.ALL)
   List<Taco> tacos = new ArrayList<>();
 
-  public TacoOrder(){
+  public Order(){
   }
 
   public Date getPlacedAt(){

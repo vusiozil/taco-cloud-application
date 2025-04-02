@@ -1,8 +1,8 @@
 package taco.service;
 
-import taco.domain.TacoOrder;
+import taco.domain.Order;
 
 public interface OrderMessagingService {
 
-	void sendOrder(TacoOrder order);
+	void sendOrder(Order order);
 }

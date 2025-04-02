@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-import taco.domain.TacoOrder;
+import taco.domain.Order;
 import taco.service.OrderMessagingService;
 
 @Service
@@ -21,7 +21,7 @@ public class AMQPOrderMessagingService implements OrderMessagingService {
   }
 
   @Override
-  public void sendOrder(TacoOrder order){
+  public void sendOrder(Order order){
    template.convertAndSend("amq.topic","kitchen_keys",order);
     LOG.info("Sent Taco order to Rabbit Message Broker");
   }

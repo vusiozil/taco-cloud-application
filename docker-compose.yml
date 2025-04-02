@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .  # This points to the current directory where the Dockerfile is located
+      dockerfile: Dockerfile  # You can specify a different Dockerfile name if needed
+    container_name: taco-application
+    ports:
+      - "8443:8443"
+    depends_on:
+      rabbitmq:
+        condition: service_started
+      artemis:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+    networks:
+      - scorpion-network
+    volumes:
+      - /home/vusimuzi/workplace/data/app:/app/data  # Optional, replace with your actual volume setup if needed
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      - POSTGRES_DB=taco_db
+      - POSTGRES_USER=taco_user
+      - POSTGRES_PASSWORD=taco_pass
+    ports:
+      - "5432:5432"  #PostgreSQL default port
+    networks:
+      - scorpion-network
+    volumes:
+      - /home/vusimuzi/workplace/data/postgresql:/var/lib/postgresql/data" #Use the environment variable for this value
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U taco_user -d taco_db" ]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    ports:
+      - "5672:5672"
+      - "15672:15672"  # RabbitMQ Management UI
+    networks:
+      - scorpion-network
+
+  artemis:
+    image: vromero/activemq-artemis:latest
+    container_name: artemis
+    environment:
+      - ARTEMIS_USERNAME=taco
+      - ARTEMIS_PASSWORD=12345
+    ports:
+      - "61616:61616"  # Artemis JMS port
+    volumes:
+      - /home/vusimuzi/workplace/data/artemis:/var/lib/artemis/data  # Persist Artemis data to host
+    networks:
+      - scorpion-network
+
+networks:
+  scorpion-network:
+    driver: bridge

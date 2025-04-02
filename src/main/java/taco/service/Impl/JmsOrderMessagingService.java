@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
-import taco.domain.TacoOrder;
+import taco.domain.Order;
 import taco.service.OrderMessagingService;
 
 @Service
@@ -21,7 +21,7 @@ public class JmsOrderMessagingService implements OrderMessagingService {
   }
 
   @Override
-  public void sendOrder(TacoOrder order){
+  public void sendOrder(Order order){
 
     template.convertAndSend("tacocloud.order.queue", order,
             message -> {

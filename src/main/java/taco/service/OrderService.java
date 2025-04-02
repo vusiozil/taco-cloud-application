@@ -2,7 +2,7 @@ package taco.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import taco.domain.TacoOrder;
+import taco.domain.Order;
 
 import java.util.List;
 
@@ -10,16 +10,16 @@ public interface OrderService {
 
   void deleteAllOrders();
 
-  TacoOrder save(TacoOrder order);
+  Order save(Order order);
 
-  TacoOrder findById(Long id);
+  Order findById(Long id);
 
   void deleteById(Long id);
 
-  Page<TacoOrder> findAll(Pageable pageable);
+  Page<Order> findAll(Pageable pageable);
 
-  List<TacoOrder> findAll();
+  List<Order> findAll();
 
-  void update(TacoOrder tacoOrder);
+  void update(Order order);
 
 }

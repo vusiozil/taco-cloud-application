@@ -6,7 +6,7 @@ package taco.domain;
 
 //implements UserDetails
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Arrays;
 import java.util.Collection;
 

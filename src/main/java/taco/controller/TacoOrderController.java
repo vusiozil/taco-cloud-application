@@ -9,11 +9,11 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import taco.domain.OrderStage;
-import taco.domain.TacoOrder;
+import taco.domain.Order;
 import taco.service.OrderMessagingService;
 import taco.service.OrderService;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.net.URI;
 
 @RestController
@@ -21,7 +21,7 @@ import java.net.URI;
 @Tag(name = "Order API", description = "Endpoints for managing taco orders")
 public class TacoOrderController {
 
-  private OrderService orderService;
+  private final OrderService orderService;
 
   private final OrderMessagingService messagingService;
 
@@ -38,13 +38,13 @@ public class TacoOrderController {
           description = "Saves a new taco order and assigns it the status 'PLACED'. The order is " +
                   "also sent to the messaging service."
   )
-  public ResponseEntity<String> save(@Valid @RequestBody TacoOrder order){
+  public ResponseEntity<String> save(@Valid @RequestBody Order order){
 
     order.setOrderStage(OrderStage.PLACED);
 
     messagingService.sendOrder(order);
 
-    TacoOrder tacoOrder = orderService.save(order);
+    Order tacoOrder = orderService.save(order);
     return ResponseEntity
             .created(URI.create("/orders/" + tacoOrder.getId()))
             .body("Taco order created successfully");
@@ -55,12 +55,12 @@ public class TacoOrderController {
           summary = "Update an existing order",
           description = "Updates the details of an existing order based on the given ID."
   )
-  public ResponseEntity<String> update(@Valid @RequestBody TacoOrder tacoOrder,
+  public ResponseEntity<String> update(@Valid @RequestBody Order order,
                                        @Parameter(description = "ID of the order to update")
                                        @PathVariable("id") Long id){
 
-    tacoOrder.setId(id);
-    orderService.update(tacoOrder);
+    order.setId(id);
+    orderService.update(order);
     return ResponseEntity
             .ok("Order updated successfully");
   }
@@ -84,12 +84,12 @@ public class TacoOrderController {
           summary = "Retrieve an order",
           description = "Fetches an order by the given ID."
   )
-  public ResponseEntity<TacoOrder> getOrderById(@Parameter(description = "ID of the order to " +
+  public ResponseEntity<Order> getOrderById(@Parameter(description = "ID of the order to " +
           "retrieve") @PathVariable("id") Long id){
 
-    TacoOrder tacoOrder = orderService.findById(id);
+    Order order = orderService.findById(id);
 
-    return ResponseEntity.ok(tacoOrder);
+    return ResponseEntity.ok(order);
 
   }
 
