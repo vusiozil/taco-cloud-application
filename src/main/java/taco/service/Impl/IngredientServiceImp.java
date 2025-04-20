@@ -54,7 +54,7 @@ public class IngredientServiceImp implements IngredientService {
   @Override
   public void update(Ingredient ingredient){
 
-    if(ingredientRepository.existsById(ingredient.getId())){
+    if(!ingredientRepository.existsById(ingredient.getId())){
       throw new DataNotFoundException("Ingredient " + ingredient.getId());
     }
     ingredientRepository.save(ingredient);

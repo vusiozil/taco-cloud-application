@@ -2,9 +2,15 @@ package taco.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +20,7 @@ import taco.service.TacoService;
 
 import jakarta.validation.Valid;
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/tacos")
@@ -33,15 +40,24 @@ public class TacoController {
           description = "Fetches a list of all available tacos with optional pagination and " +
                   "sorting."
   )
-  public ResponseEntity<?> findAll(@Parameter(description = "Pagination and sorting options")
-                                   Pageable pageable){
+  @ApiResponses(value = {
+          @ApiResponse(responseCode = "200", description = "List of tacos", content = @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = Taco.class)
+          ))
+  })
+  public ResponseEntity<Page<Taco>> findAll(
+          @ParameterObject @Parameter(description = "Pagination and sorting options")
+          Pageable pageable) {
+    Page<Taco> tacos;
 
-    if(pageable.isUnpaged()){
-
-      return ResponseEntity.ok(tacoService.findAll());
+    if (pageable.isUnpaged()) {
+      List<Taco> tacoList = tacoService.findAll();
+      tacos = new PageImpl<>(tacoList);
+    } else {
+      tacos = tacoService.findAll(pageable);
     }
 
-    Page<Taco> tacos = tacoService.findAll(pageable);
     return ResponseEntity.ok(tacos);
   }
 

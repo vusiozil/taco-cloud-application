@@ -15,7 +15,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 
-import static taco.helper.FeatureFlags.DISCOUNT_APPLIED;
+//import static taco.helper.FeatureFlags.DISCOUNT_APPLIED;
 
 @Entity
 public class Taco extends BaseEntity implements Serializable {
@@ -72,9 +72,9 @@ public class Taco extends BaseEntity implements Serializable {
             .mapToDouble(Ingredient::getPrice)
             .sum();
 
-    if(DISCOUNT_APPLIED.isActive()){
-      amount *= 0.95; // apply the 5% discount
-    }
+//    if(DISCOUNT_APPLIED.isActive()){
+//      amount *= 0.95; // apply the 5% discount
+//    }
 
     return BigDecimal
             .valueOf(amount)
